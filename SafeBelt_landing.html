@@ -1,0 +1,787 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>GuardaObra — Protección que no espera tu voz</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800;900&family=Inter:wght@400;500;600&display=swap" rel="stylesheet"/>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --orange:    #E85D04;
+    --orange-lt: #FF7B20;
+    --yellow:    #FFB703;
+    --cream:     #FFF8F0;
+    --concrete:  #2B2D42;
+    --steel:     #4A4E69;
+    --white:     #FFFFFF;
+    --border:    rgba(232,93,4,0.15);
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background: var(--white);
+    color: var(--concrete);
+    font-size: 18px;
+    line-height: 1.6;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: sticky; top: 0; z-index: 100;
+    background: var(--concrete);
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 48px;
+    height: 68px;
+    box-shadow: 0 2px 20px rgba(0,0,0,0.3);
+  }
+  .nav-logo {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 900; font-size: 28px; letter-spacing: 1px;
+    color: var(--white);
+    text-decoration: none;
+  }
+  .nav-logo span { color: var(--orange); }
+  .nav-links { display: flex; gap: 32px; list-style: none; }
+  .nav-links a {
+    color: rgba(255,255,255,0.75); font-size: 16px; text-decoration: none;
+    font-weight: 500; transition: color .2s;
+  }
+  .nav-links a:hover { color: var(--yellow); }
+  .nav-cta {
+    background: var(--orange); color: var(--white);
+    padding: 10px 26px; border-radius: 4px;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 700; font-size: 18px; letter-spacing: .5px;
+    text-decoration: none; transition: background .2s;
+  }
+  .nav-cta:hover { background: var(--orange-lt); }
+
+  /* ── HERO ── */
+  .hero {
+    background: var(--concrete);
+    min-height: 92vh;
+    display: grid; grid-template-columns: 1fr 1fr;
+    align-items: center;
+    padding: 80px 80px 80px 80px;
+    gap: 60px;
+    position: relative; overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute; top: -120px; right: -120px;
+    width: 500px; height: 500px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(232,93,4,0.18) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .hero-badge {
+    display: inline-block;
+    background: var(--orange); color: var(--white);
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 700; font-size: 15px; letter-spacing: 2px;
+    text-transform: uppercase; padding: 6px 16px;
+    border-radius: 2px; margin-bottom: 20px;
+  }
+  .hero h1 {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: clamp(52px, 6vw, 86px);
+    font-weight: 900; line-height: 1.0;
+    color: var(--white);
+    margin-bottom: 24px;
+    letter-spacing: -1px;
+  }
+  .hero h1 em {
+    color: var(--orange); font-style: normal;
+    display: block;
+  }
+  .hero p {
+    font-size: 20px; color: rgba(255,255,255,0.72);
+    line-height: 1.65; max-width: 480px;
+    margin-bottom: 40px;
+  }
+  .hero-actions { display: flex; gap: 16px; align-items: center; flex-wrap: wrap; }
+  .btn-primary {
+    background: var(--orange); color: var(--white);
+    padding: 16px 36px; border-radius: 4px;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 800; font-size: 22px; letter-spacing: .5px;
+    text-decoration: none; transition: background .2s, transform .15s;
+    display: inline-block;
+  }
+  .btn-primary:hover { background: var(--orange-lt); transform: translateY(-2px); }
+  .btn-secondary {
+    color: rgba(255,255,255,0.65); font-size: 18px;
+    text-decoration: none; font-weight: 500;
+    display: inline-flex; align-items: center; gap: 8px;
+    transition: color .2s;
+  }
+  .btn-secondary:hover { color: var(--yellow); }
+
+  .hero-visual {
+    display: flex; justify-content: center; align-items: center;
+    position: relative;
+  }
+  .device-glow {
+    position: relative; width: 380px; height: 380px;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .pulse-ring {
+    position: absolute; inset: 0; border-radius: 50%;
+    border: 2px solid var(--orange);
+    animation: pulseOut 2.2s ease-out infinite;
+  }
+  .pulse-ring:nth-child(2) { animation-delay: .7s; }
+  .pulse-ring:nth-child(3) { animation-delay: 1.4s; }
+  @keyframes pulseOut {
+    0%   { transform: scale(.7); opacity: .8; }
+    100% { transform: scale(1.35); opacity: 0; }
+  }
+  .device-img {
+    width: 290px; height: 290px;
+    object-fit: contain; border-radius: 50%;
+    position: relative; z-index: 2;
+    filter: drop-shadow(0 20px 50px rgba(232,93,4,0.4));
+  }
+
+  /* ── STATS STRIP ── */
+  .stats-strip {
+    background: var(--orange);
+    display: flex; justify-content: space-around; align-items: center;
+    padding: 36px 80px; flex-wrap: wrap; gap: 24px;
+  }
+  .stat { text-align: center; }
+  .stat-num {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 52px; font-weight: 900; color: var(--white);
+    line-height: 1; display: block;
+  }
+  .stat-label {
+    font-size: 15px; color: rgba(255,255,255,0.85);
+    font-weight: 500; text-transform: uppercase; letter-spacing: 1px;
+  }
+  .stat-divider { width: 1px; height: 60px; background: rgba(255,255,255,0.3); }
+
+  /* ── PROBLEM SECTION ── */
+  .problem-section {
+    background: var(--cream);
+    padding: 100px 80px;
+    display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center;
+  }
+  .section-eyebrow {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 700; font-size: 14px; letter-spacing: 3px;
+    color: var(--orange); text-transform: uppercase; margin-bottom: 14px;
+  }
+  .section-title {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: clamp(38px, 4vw, 58px); font-weight: 800;
+    color: var(--concrete); line-height: 1.05; margin-bottom: 24px;
+  }
+  .section-title span { color: var(--orange); }
+  .section-body p {
+    font-size: 19px; color: var(--steel); line-height: 1.7;
+    margin-bottom: 18px;
+  }
+  .problem-cards { display: flex; flex-direction: column; gap: 18px; }
+  .problem-card {
+    background: var(--white);
+    border-left: 5px solid var(--orange);
+    padding: 22px 26px; border-radius: 4px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+  }
+  .problem-card h3 {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 22px; font-weight: 800; color: var(--concrete);
+    margin-bottom: 6px;
+  }
+  .problem-card p { font-size: 17px; color: var(--steel); margin: 0; }
+
+  /* ── PRODUCT REVEAL ── */
+  .product-section {
+    background: var(--concrete);
+    padding: 100px 80px;
+    text-align: center;
+  }
+  .product-section .section-eyebrow { color: var(--yellow); }
+  .product-section .section-title { color: var(--white); margin-bottom: 16px; }
+  .product-section > p {
+    font-size: 20px; color: rgba(255,255,255,0.65);
+    max-width: 600px; margin: 0 auto 70px;
+  }
+  .features-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 28px;
+    margin-top: 60px;
+  }
+  .feature-card {
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 8px; padding: 36px 28px;
+    text-align: left; transition: border-color .25s, background .25s;
+  }
+  .feature-card:hover {
+    border-color: var(--orange);
+    background: rgba(232,93,4,0.1);
+  }
+  .feature-icon {
+    width: 56px; height: 56px; border-radius: 12px;
+    background: var(--orange);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 26px; margin-bottom: 22px;
+  }
+  .feature-card h3 {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 26px; font-weight: 800; color: var(--white);
+    margin-bottom: 10px;
+  }
+  .feature-card p { font-size: 17px; color: rgba(255,255,255,0.62); line-height: 1.6; }
+
+  /* ── DEVICE ANATOMY ── */
+  .anatomy-section {
+    background: var(--white);
+    padding: 100px 80px;
+  }
+  .anatomy-section .section-eyebrow { text-align: center; }
+  .anatomy-section .section-title { text-align: center; margin-bottom: 12px; }
+  .anatomy-intro {
+    font-size: 19px; color: var(--steel); text-align: center;
+    max-width: 600px; margin: 0 auto 70px;
+  }
+
+  .anatomy-layout {
+    display: grid; grid-template-columns: 1fr 480px 1fr; gap: 40px;
+    align-items: center;
+  }
+  .anatomy-points { display: flex; flex-direction: column; gap: 28px; }
+  .anatomy-point {
+    display: flex; gap: 16px; align-items: flex-start;
+  }
+  .anatomy-point.right { flex-direction: row-reverse; text-align: right; }
+  .point-dot {
+    width: 36px; height: 36px; border-radius: 50%;
+    background: var(--orange); color: var(--white);
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 800; font-size: 18px; flex-shrink: 0; margin-top: 4px;
+  }
+  .anatomy-point h4 {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 22px; font-weight: 800; color: var(--concrete);
+    margin-bottom: 4px;
+  }
+  .anatomy-point p { font-size: 16px; color: var(--steel); line-height: 1.55; }
+
+  .anatomy-center { text-align: center; position: relative; }
+  .anatomy-device-img {
+    width: 100%; max-width: 480px;
+    border-radius: 50%; box-shadow: 0 20px 60px rgba(0,0,0,0.14);
+    border: 6px solid var(--cream);
+  }
+
+  /* ── IN-USE SECTION ── */
+  .inuse-section {
+    background: var(--cream);
+    padding: 100px 80px;
+    display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center;
+  }
+  .inuse-img {
+    width: 100%; max-width: 520px;
+    border-radius: 12px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+    object-fit: cover; height: 600px;
+    justify-self: center;
+  }
+  .inuse-content .section-body p {
+    font-size: 19px;
+  }
+  .inuse-checklist {
+    list-style: none; margin-top: 28px;
+    display: flex; flex-direction: column; gap: 16px;
+  }
+  .inuse-checklist li {
+    display: flex; gap: 14px; align-items: flex-start;
+    font-size: 18px; color: var(--concrete);
+  }
+  .check-icon {
+    width: 26px; height: 26px; border-radius: 50%;
+    background: var(--orange); color: white;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px; flex-shrink: 0; margin-top: 2px;
+  }
+
+  /* ── HOW IT WORKS ── */
+  .how-section {
+    background: var(--concrete);
+    padding: 100px 80px;
+  }
+  .how-section .section-eyebrow { color: var(--yellow); text-align: center; }
+  .how-section .section-title { color: var(--white); text-align: center; margin-bottom: 60px; }
+  .steps-row {
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 0;
+    position: relative;
+  }
+  .steps-row::before {
+    content: '';
+    position: absolute; top: 38px; left: 12.5%; right: 12.5%;
+    height: 2px; background: rgba(232,93,4,0.4);
+    z-index: 0;
+  }
+  .step { text-align: center; padding: 0 20px; position: relative; z-index: 1; }
+  .step-num {
+    width: 76px; height: 76px; border-radius: 50%;
+    background: var(--orange); color: var(--white);
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 36px; font-weight: 900;
+    display: flex; align-items: center; justify-content: center;
+    margin: 0 auto 24px;
+    box-shadow: 0 0 0 8px var(--concrete), 0 0 0 10px rgba(232,93,4,0.3);
+  }
+  .step h3 {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 22px; font-weight: 800; color: var(--white);
+    margin-bottom: 10px;
+  }
+  .step p { font-size: 16px; color: rgba(255,255,255,0.6); line-height: 1.6; }
+
+  /* ── COMPARISON ── */
+  .comparison-section {
+    background: var(--white);
+    padding: 100px 80px;
+  }
+  .comparison-section .section-eyebrow { text-align: center; }
+  .comparison-section .section-title { text-align: center; margin-bottom: 60px; }
+  .compare-table { width: 100%; border-collapse: collapse; font-size: 18px; }
+  .compare-table thead th {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 20px; font-weight: 800; padding: 18px 24px;
+    text-align: center;
+  }
+  .compare-table thead th:first-child { text-align: left; }
+  .compare-table thead th.GuardaObra-col {
+    background: var(--orange); color: var(--white); border-radius: 8px 8px 0 0;
+  }
+  .compare-table tbody tr { border-bottom: 1px solid rgba(0,0,0,0.07); }
+  .compare-table tbody tr:hover { background: var(--cream); }
+  .compare-table td {
+    padding: 18px 24px; color: var(--steel); text-align: center;
+  }
+  .compare-table td:first-child { text-align: left; color: var(--concrete); font-weight: 500; }
+  .compare-table td.GuardaObra-col { background: rgba(232,93,4,0.07); font-weight: 600; }
+  .yes { color: #16a34a; font-size: 22px; }
+  .no  { color: #dc2626; font-size: 22px; }
+  .partial { color: var(--orange); font-size: 16px; font-weight: 600; }
+
+  /* ── CTA ── */
+  .cta-section {
+    background: var(--orange);
+    padding: 100px 80px;
+    text-align: center;
+  }
+  .cta-section h2 {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: clamp(44px, 5vw, 72px); font-weight: 900;
+    color: var(--white); line-height: 1.05;
+    margin-bottom: 22px;
+  }
+  .cta-section p {
+    font-size: 21px; color: rgba(255,255,255,0.85);
+    max-width: 560px; margin: 0 auto 44px;
+  }
+  .cta-group { display: flex; gap: 20px; justify-content: center; flex-wrap: wrap; }
+  .btn-cta-white {
+    background: var(--white); color: var(--orange);
+    padding: 18px 44px; border-radius: 4px;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 900; font-size: 24px;
+    text-decoration: none; transition: transform .15s, box-shadow .15s;
+    display: inline-block;
+  }
+  .btn-cta-white:hover { transform: translateY(-3px); box-shadow: 0 12px 32px rgba(0,0,0,0.18); }
+  .btn-cta-outline {
+    background: transparent; color: var(--white);
+    border: 2px solid rgba(255,255,255,0.6);
+    padding: 16px 40px; border-radius: 4px;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 700; font-size: 22px;
+    text-decoration: none; transition: border-color .2s, background .2s;
+    display: inline-block;
+  }
+  .btn-cta-outline:hover { border-color: var(--white); background: rgba(255,255,255,0.12); }
+
+  /* ── FOOTER ── */
+  footer {
+    background: #1a1b28;
+    padding: 40px 80px;
+    display: flex; justify-content: space-between; align-items: center;
+    flex-wrap: wrap; gap: 16px;
+  }
+  .footer-logo {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 900; font-size: 28px; color: var(--white); letter-spacing: 1px;
+  }
+  .footer-logo span { color: var(--orange); }
+  .footer-text { font-size: 15px; color: rgba(255,255,255,0.4); }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 900px) {
+    nav { padding: 0 24px; }
+    .nav-links { display: none; }
+    .hero { grid-template-columns: 1fr; padding: 60px 24px; text-align: center; }
+    .hero p { max-width: 100%; }
+    .hero-visual { order: -1; }
+    .device-glow { width: 260px; height: 260px; }
+    .device-img { width: 200px; height: 200px; }
+    .stats-strip { padding: 36px 24px; }
+    .stat-divider { display: none; }
+    .problem-section, .inuse-section { grid-template-columns: 1fr; padding: 60px 24px; gap: 40px; }
+    .inuse-img { height: 400px; }
+    .product-section, .anatomy-section, .how-section,
+    .comparison-section, .cta-section { padding: 70px 24px; }
+    .features-grid { grid-template-columns: 1fr; }
+    .steps-row { grid-template-columns: 1fr 1fr; gap: 40px; }
+    .steps-row::before { display: none; }
+    .anatomy-layout { grid-template-columns: 1fr; }
+    .anatomy-points.right-col .anatomy-point { flex-direction: row; text-align: left; }
+    footer { padding: 32px 24px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="nav-logo">Guarda<span>Obra</span></a>
+  <ul class="nav-links">
+    <li><a href="#producto">Producto</a></li>
+    <li><a href="#como-funciona">Cómo funciona</a></li>
+    <li><a href="#dispositivo">Dispositivo</a></li>
+    <li><a href="#comparacion">Comparación</a></li>
+  </ul>
+  <a href="#contacto" class="nav-cta">Solicitar Demo</a>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-content">
+    <span class="hero-badge">🏗️ Tecnología IoT para Construcción</span>
+    <h1>Tu trabajador<em>no puede gritar.</em>GuardaObra sí.</h1>
+    <p>En obras con ruido sobre 85 dB, la voz no es suficiente. GuardaObra detecta caídas y exposición térmica extrema, y alerta al supervisor en segundos — sin que el trabajador haga nada.</p>
+    <div class="hero-actions">
+      <a href="#contacto" class="btn-primary">Quiero proteger a mi equipo →</a>
+      <a href="#dispositivo" class="btn-secondary">▶ Ver el dispositivo</a>
+    </div>
+  </div>
+  <div class="hero-visual">
+    <div class="device-glow">
+      <div class="pulse-ring"></div>
+      <div class="pulse-ring"></div>
+      <div class="pulse-ring"></div>
+      <img
+        src="imagenModelo.png"
+        alt="GuardaObra Arduino MKR IoT Carrier"
+        class="device-img"
+      />
+    </div>
+  </div>
+</section>
+
+<!-- STATS -->
+<div class="stats-strip">
+  <div class="stat">
+    <span class="stat-num">+85 dB</span>
+    <span class="stat-label">Ruido promedio en obra — la voz no alcanza</span>
+  </div>
+  <div class="stat-divider"></div>
+  <div class="stat">
+    <span class="stat-num">&lt;5 seg</span>
+    <span class="stat-label">Tiempo de alerta al supervisor</span>
+  </div>
+  <div class="stat-divider"></div>
+  <div class="stat">
+    <span class="stat-num">24/7</span>
+    <span class="stat-label">Monitoreo autónomo sin intervención</span>
+  </div>
+  <div class="stat-divider"></div>
+  <div class="stat">
+    <span class="stat-num">0</span>
+    <span class="stat-label">Acciones requeridas por el trabajador</span>
+  </div>
+</div>
+
+<!-- PROBLEMA -->
+<section class="problem-section" id="problema">
+  <div class="section-body">
+    <p class="section-eyebrow">El problema real</p>
+    <h2 class="section-title">Cada minuto sin alerta<span> agrava el daño.</span></h2>
+    <p>En las obras de construcción, cuando ocurre un accidente, el trabajador accidentado no puede reportarlo — ya sea por el ruido, la inconsciencia o el miedo a represalias.</p>
+    <p>Ese retraso convierte lesiones tratables en consecuencias permanentes. GuardaObra elimina ese tiempo muerto.</p>
+  </div>
+  <div class="problem-cards">
+    <div class="problem-card">
+      <h3>🔊 Entorno acústico hostil</h3>
+      <p>Niveles de ruido superiores a 85 dB impiden comunicación verbal efectiva en toda la obra.</p>
+    </div>
+    <div class="problem-card">
+      <h3>😶 Cultura del silencio</h3>
+      <p>Los trabajadores evitan reportar por miedo a penalizaciones o detener la producción.</p>
+    </div>
+    <div class="problem-card">
+      <h3>🔄 Alta rotación de personal</h3>
+      <p>Trabajadores nuevos no internalizan los protocolos de emergencia antes de que ocurra un accidente.</p>
+    </div>
+  </div>
+</section>
+
+<!-- PRODUCTO / FEATURES -->
+<section class="product-section" id="producto">
+  <p class="section-eyebrow">La solución</p>
+  <h2 class="section-title">Protección autónoma, sin depender de nadie.</h2>
+  <p>GuardaObra actúa por sí solo. No necesita que el trabajador piense, grite ni recuerde un protocolo.</p>
+  <div class="features-grid">
+    <div class="feature-card">
+      <div class="feature-icon">📉</div>
+      <h3>Acelerómetro de Caídas</h3>
+      <p>Detecta cambios bruscos de velocidad y aceleración propios de una caída de altura. Filtra automáticamente el movimiento normal de caminata para evitar falsas alertas.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🌡️</div>
+      <h3>Sensor de Temperatura Corporal</h3>
+      <p>Monitorea la exposición térmica del trabajador en tiempo real. Si supera umbrales críticos por tiempo prolongado, activa la alerta antes de que ocurra un golpe de calor.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">📡</div>
+      <h3>Transmisión IoT Inmediata</h3>
+      <p>Al detectar un evento, el dispositivo envía la alerta por red inalámbrica directamente al supervisor o central de mando — sin dependencia del celular del trabajador.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🧱</div>
+      <h3>Diseño para Obra</h3>
+      <p>Carcasa robusta diseñada para resistir polvo, vibraciones y condiciones climáticas adversas. Se monta en el cinturón del trabajador sin incomodar su movilidad.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">⚡</div>
+      <h3>Sin Acción del Trabajador</h3>
+      <p>A diferencia de pulsadores de emergencia, GuardaObra no requiere que el trabajador actúe. Si está inconsciente, el reporte igual llega al supervisor.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🔋</div>
+      <h3>Batería de Larga Duración</h3>
+      <p>Autonomía pensada para jornadas completas de obra. Indicador visual en pantalla integrada para conocer el estado del dispositivo en todo momento.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ANATOMÍA DEL DISPOSITIVO -->
+<section class="anatomy-section" id="dispositivo">
+  <p class="section-eyebrow">El dispositivo</p>
+  <h2 class="section-title">Conoce cada parte de GuardaObra</h2>
+  <p class="anatomy-intro">Un hardware compacto y robusto que integra todo lo necesario para proteger a tu equipo desde el primer día de trabajo.</p>
+
+  <div class="anatomy-layout">
+    <!-- Puntos izquierda -->
+    <div class="anatomy-points left-col">
+      <div class="anatomy-point">
+        <div class="point-dot">1</div>
+        <div>
+          <h4>Pantalla OLED central</h4>
+          <p>Muestra el estado del dispositivo, temperatura actual y confirmación de alertas enviadas.</p>
+        </div>
+      </div>
+      <div class="anatomy-point">
+        <div class="point-dot">2</div>
+        <div>
+          <h4>Botones táctiles (SW1–SW5)</h4>
+          <p>Permiten navegación de menú y activación manual de alerta SOS si el trabajador puede hacerlo.</p>
+        </div>
+      </div>
+      <div class="anatomy-point">
+        <div class="point-dot">3</div>
+        <div>
+          <h4>Módulo WiFi integrado</h4>
+          <p>Conectividad inalámbrica para transmitir alertas a la red de la obra sin hardware adicional.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Imagen central -->
+    <div class="anatomy-center">
+      <img
+        src="imagenModelo.png"
+        alt="GuardaObra — Vista frontal del dispositivo"
+        class="anatomy-device-img"
+      />
+    </div>
+
+    <!-- Puntos derecha -->
+    <div class="anatomy-points right-col">
+      <div class="anatomy-point right">
+        <div class="point-dot">4</div>
+        <div>
+          <h4>Acelerómetro IMU</h4>
+          <p>Sensor de movimiento de alta precisión que distingue la caminata normal de una caída real.</p>
+        </div>
+      </div>
+      <div class="anatomy-point right">
+        <div class="point-dot">5</div>
+        <div>
+          <h4>Sensor de temperatura</h4>
+          <p>Monitoreo térmico continuo para detectar condiciones de golpe de calor antes de que ocurran.</p>
+        </div>
+      </div>
+      <div class="anatomy-point right">
+        <div class="point-dot">6</div>
+        <div>
+          <h4>Puerto USB de carga</h4>
+          <p>Carga rápida entre turnos. Compatible con cargadores estándar de obra o estaciones de carga colectiva.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- EN USO — FOTO DEL TRABAJADOR -->
+<section class="inuse-section">
+  <img
+    src="ejemplo.png"
+    alt="GuardaObra montado en cinturón de trabajador de construcción"
+    class="inuse-img"
+  />
+  <div class="inuse-content">
+    <p class="section-eyebrow">En el campo real</p>
+    <h2 class="section-title">Se pone, se olvida.<span> Él te cuida.</span></h2>
+    <div class="section-body">
+      <p>GuardaObra se monta en el cinturón del trabajador en menos de 10 segundos. Una vez puesto, opera de forma completamente autónoma durante toda la jornada.</p>
+      <p>No requiere capacitación adicional. No interfiere con las labores del trabajador. No depende de que nadie recuerde activarlo.</p>
+    </div>
+    <ul class="inuse-checklist">
+      <li>
+        <div class="check-icon">✓</div>
+        <span>Compatible con cualquier cinturón estándar de trabajo</span>
+      </li>
+      <li>
+        <div class="check-icon">✓</div>
+        <span>Peso y tamaño ergonómico, no limita el movimiento</span>
+      </li>
+      <li>
+        <div class="check-icon">✓</div>
+        <span>Visible para supervisores — genera cultura de seguridad</span>
+      </li>
+      <li>
+        <div class="check-icon">✓</div>
+        <span>Funciona aunque el trabajador esté inconsciente o incapacitado</span>
+      </li>
+    </ul>
+  </div>
+</section>
+
+<!-- CÓMO FUNCIONA -->
+<section class="how-section" id="como-funciona">
+  <p class="section-eyebrow">El proceso</p>
+  <h2 class="section-title" style="color:var(--white);">De accidente a respuesta<br>en cuatro pasos.</h2>
+  <div class="steps-row">
+    <div class="step">
+      <div class="step-num">1</div>
+      <h3>Detección automática</h3>
+      <p>El acelerómetro registra una caída brusca o el sensor de temperatura supera el umbral crítico configurado.</p>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <h3>Análisis inteligente</h3>
+      <p>El procesador descarta falsos positivos comparando el patrón con movimientos normales de la jornada.</p>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <h3>Alerta IoT enviada</h3>
+      <p>En menos de 5 segundos, la alerta llega al panel del supervisor con ubicación, tipo de evento y trabajador.</p>
+    </div>
+    <div class="step">
+      <div class="step-num">4</div>
+      <h3>Respuesta inmediata</h3>
+      <p>El supervisor activa el protocolo de emergencia con información precisa — sin buscar ni preguntar.</p>
+    </div>
+  </div>
+</section>
+
+<!-- COMPARACIÓN -->
+<section class="comparison-section" id="comparacion">
+  <p class="section-eyebrow">Ventaja competitiva</p>
+  <h2 class="section-title">GuardaObra vs. el mercado actual</h2>
+  <table class="compare-table">
+    <thead>
+      <tr>
+        <th>Característica</th>
+        <th class="GuardaObra-col">GuardaObra</th>
+        <th>Blackline Guardaty</th>
+        <th>StayGuarda</th>
+        <th>GuardatyCulture</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Detección autónoma de caídas</td>
+        <td class="GuardaObra-col"><span class="yes">✔</span></td>
+        <td><span class="yes">✔</span></td>
+        <td><span class="no">✗</span></td>
+        <td><span class="no">✗</span></td>
+      </tr>
+      <tr>
+        <td>Sensor de temperatura integrado</td>
+        <td class="GuardaObra-col"><span class="yes">✔</span></td>
+        <td><span class="no">✗</span></td>
+        <td><span class="no">✗</span></td>
+        <td><span class="no">✗</span></td>
+      </tr>
+      <tr>
+        <td>Funciona sin smartphone del trabajador</td>
+        <td class="GuardaObra-col"><span class="yes">✔</span></td>
+        <td><span class="yes">✔</span></td>
+        <td><span class="no">✗</span></td>
+        <td><span class="no">✗</span></td>
+      </tr>
+      <tr>
+        <td>Alerta aunque el trabajador esté inconsciente</td>
+        <td class="GuardaObra-col"><span class="yes">✔</span></td>
+        <td><span class="partial">Parcial</span></td>
+        <td><span class="no">✗</span></td>
+        <td><span class="no">✗</span></td>
+      </tr>
+      <tr>
+        <td>No requiere suscripción mensual</td>
+        <td class="GuardaObra-col"><span class="yes">✔</span></td>
+        <td><span class="no">✗</span></td>
+        <td><span class="no">✗</span></td>
+        <td><span class="no">✗</span></td>
+      </tr>
+      <tr>
+        <td>Sin capacitación adicional</td>
+        <td class="GuardaObra-col"><span class="yes">✔</span></td>
+        <td><span class="partial">Parcial</span></td>
+        <td><span class="no">✗</span></td>
+        <td><span class="no">✗</span></td>
+      </tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- CTA FINAL -->
+<section class="cta-section" id="contacto">
+  <h2>Tu próxima obra puede ser<br>la primera sin fatalidades.</h2>
+  <p>Solicita una demo gratuita y te mostramos cómo GuardaObra se integra a tu operación en un día.</p>
+  <div class="cta-group">
+    <a href="mailto:contacto@GuardaObra.cl" class="btn-cta-white">Solicitar Demo Gratuita</a>
+    <a href="tel:+56900000000" class="btn-cta-outline">📞 Habla con nosotros</a>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">Guarda<span>Obra</span></div>
+  <p class="footer-text">Monitoreo Inteligente de Seguridad con Arduino · TEC-UCT · Temuco, Chile</p>
+  <p class="footer-text">© 2025 GuardaObra — Todos los derechos reservados</p>
+</footer>
+
+</body>
+</html>
