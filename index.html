@@ -423,6 +423,33 @@
     font-weight: 900; font-size: 28px; color: var(--white); letter-spacing: 1px;
   }
   .footer-logo span { color: var(--orange); }
+  .footer-socials {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+  }
+  .social-link {
+    color: rgba(255, 255, 255, 0.6);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.05);
+    transition: color 0.25s, background-color 0.25s, transform 0.25s;
+  }
+  .social-link:hover {
+    color: var(--white);
+    background: var(--orange);
+    transform: translateY(-3px);
+  }
+  .social-link svg {
+    transition: transform 0.25s;
+  }
+  .social-link:hover svg {
+    transform: scale(1.1);
+  }
   .footer-text { font-size: 15px; color: rgba(255,255,255,0.4); }
 
   /* ── RESPONSIVE — TABLET ── */
@@ -872,6 +899,14 @@
 <!-- FOOTER -->
 <footer>
   <div class="footer-logo">Guarda<span>Obra</span></div>
+  <div class="footer-socials">
+    <a href="https://www.instagram.com/guarda.obra" target="_blank" rel="noopener noreferrer" aria-label="Instagram" class="social-link">
+      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="20" x="2" y="2" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" x2="17.51" y1="6.5" y2="6.5"/></svg>
+    </a>
+    <a href="https://www.tiktok.com/@guarda.obra" target="_blank" rel="noopener noreferrer" aria-label="TikTok" class="social-link">
+      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 12a4 4 0 1 0 4 4V4a5 5 0 0 0 5 5"/></svg>
+    </a>
+  </div>
   <p class="footer-text">© 2026 GuardaObra — Todos los derechos reservados</p>
 </footer>
 
